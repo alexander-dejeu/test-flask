@@ -27,21 +27,30 @@ import json
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route('/')
 def home():
-    return "Home!"
+    return 'Home!'
 
 
-@app.route("/hello")
+@app.route('/hello')
 def hello():
-    return "Hello World!"
+    return 'Hello World!'
 
 
-@app.route("/pets", methods=["GET", "POST"])
+@app.route('/pets', methods=['GET', 'POST'])
 def pets():
-    if request.method == "POST":
-
+    if request.method == 'POST':
         result = request.form
+
+        name = result['name']
+        age = result['age']
+        species = result['species']
+
+        if name is not None and result is not None and species is not None:
+            return 'proper data submited!'
+        else:
+            useful_message_for_user = 'Oops, looks like you are missing info'
+            return 'find out which screwed up'
         return result["name"] + result["age"] + result["species"]
     else:
         return "petsss!"
