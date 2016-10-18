@@ -18,12 +18,27 @@
         `/pets/<name>` and checks if a pet with that name exists. If so,
         return a JSON representation of the pet. If not, return a HTTP 404
         error with a helpful JSON error message.
+    6.  Modify the `/pets` POST handler to not only validate that the JSON
+        has the necessary fields (`name`, `age`, `species`), but also that
+        `name` is unique among all pets. If valid, respond with a HTTP 201
+        status code, otherwise 409 and a helpful error message in JSON. Test
+        the `/pets` route to ensure it responds correctly to *both* valid
+        and invalid POST requests.
+    7.  Add a new handler that receives PUT requests to the route
+        `/pets/<name>` and checks if a pet with that `name` exists. If not,
+        respond with a HTTP 404 error and a helpful JSON error message. If so,
+        validate the JSON data sent in the request body and update the pet
+        with that `name` with all the new fields. If validation fails,
+        respond with a HTTP 400 error.
+    8.  Add a new handler that accepts DELETE requests to the route
+        `/pets/<name>` and checks if a pet with that `name` exists. If so,
+        delete the pet with that `name` and return a JSON representation of
+        the deleted pet. If not, respond with a HTTP 404 error
+        and a helpful JSON error message.
 """
-from flask import Flask
-from flask import request
-import json
+from flask import Flask, request, json
 
-
+list_of_pets = []
 app = Flask(__name__)
 
 
@@ -37,23 +52,43 @@ def hello():
     return 'Hello World!'
 
 
+@app.route('/pets/<name>', methods=['GET'])
+def getPet():
+    pet_name = url.rsplict('/', 1)[-1]
+    # for pet in list_of_pets:
+    #     # if pet['name'] ==
+    # return 'pet data'
+
 @app.route('/pets', methods=['GET', 'POST'])
 def pets():
     if request.method == 'POST':
+        # Parse the request into a dictionary json object
         result = request.form
+        print 'hello world!'
+        print result
 
         name = result['name']
         age = result['age']
         species = result['species']
 
-        if name is not None and result is not None and species is not None:
-            return 'proper data submited!'
+# QUESTION: In situations like this how do you break into smaller bits of code
+        if ((not(name == "")) & (not(age == "")) & (not(species == ""))):
+            list_of_pets.append(result)
+            return 'It worked!'
         else:
-            useful_message_for_user = 'Oops, looks like you are missing info'
-            return 'find out which screwed up'
-        return result["name"] + result["age"] + result["species"]
+            useful_message_for_user = 'Oops, looks like you are missing info!  Add: '
+            if not('name' in result.keys()):
+                useful_message_for_user += 'A name. '
+            if not('age' in result.keys()):
+                useful_message_for_user += 'An age. '
+            if not('species' in result.keys()):
+                useful_message_for_user += 'A species. '
+
+            return useful_message_for_user
+
+    # Get Request
     else:
-        return "petsss!"
+        return json.dumps(list_of_pets)
 
 
 if __name__ == "__main__":
