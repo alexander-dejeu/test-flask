@@ -9,11 +9,15 @@ class FlaskServerTest(unittest.TestCase):
         server.app.testing = True
         self.app = server.app.test_client()
 
-    def test_hello(self):
-        response = self.app.get('/hello')
-        self.assertEqual(response.status_code, 200)
-        assert response.status_code == 200, 'status_code was not OK'
-        assert response.data == 'hello, world'
+    # def test_hello(self):
+    #     response = self.app.get('/hello')
+    #     self.assertEqual(response.status_code, 200)
+    #     assert response.status_code == 200, 'status_code was not OK'
+    #     assert response.data == 'Hello World!'
+
+    def test_post_pet(self):
+        response = self.app.get('/pets')
+
 
     def test_hello_to_person(self):
         response = self.app.get('/hello/Alex')

@@ -37,6 +37,7 @@
         and a helpful JSON error message.
 """
 from flask import Flask, request, json
+from flask import jsonify
 
 list_of_pets = []
 app = Flask(__name__)
@@ -51,13 +52,28 @@ def home():
 def hello():
     return 'Hello World!'
 
+"""Add a new handler that receives PUT requests to the route
+    `/pets/<name>` and checks if a pet with that `name` exists. If not,
+    respond with a HTTP 404 error and a helpful JSON error message. If so,
+    validate the JSON data sent in the request body and update the pet
+    with that `name` with all the new fields. If validation fails,
+    respond with a HTTP 400 error."""
+@app.route('/pets/<name>', methods=['GET', 'PUT'])
+def getPet(name):
+        if request.method == 'PUT':
+            for pet in list_of_pets:
+                if pet['name'] == name:
+                    # We found a pet with that name and can now update fields
+                    print(pet)
+            return json.dumps({'error':'A pet with that name already exists'}), 404
 
-@app.route('/pets/<name>', methods=['GET'])
-def getPet():
-    pet_name = url.rsplict('/', 1)[-1]
-    # for pet in list_of_pets:
-    #     # if pet['name'] ==
-    # return 'pet data'
+        else:
+            for pet in list_of_pets:
+                if(pet['name'] == name):
+                    return jsonify(pet)
+        # abort(404)
+            return '404 Error - page not found! :(', 404
+
 
 @app.route('/pets', methods=['GET', 'POST'])
 def pets():
@@ -73,8 +89,14 @@ def pets():
 
 # QUESTION: In situations like this how do you break into smaller bits of code
         if ((not(name == "")) & (not(age == "")) & (not(species == ""))):
+            # Check if the name is unique if so append to the list
+            for pet in list_of_pets:
+                if(pet['name'] == name):
+                    # Issue where the name already exists
+                    return json.dumps({'error':'name already exists'}), 409
+
             list_of_pets.append(result)
-            return 'It worked!'
+            return 'Pet was saved!', 201
         else:
             useful_message_for_user = 'Oops, looks like you are missing info!  Add: '
             if not('name' in result.keys()):
