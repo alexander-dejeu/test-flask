@@ -52,12 +52,7 @@ def home():
 def hello():
     return 'Hello World!'
 
-"""Add a new handler that receives PUT requests to the route
-    `/pets/<name>` and checks if a pet with that `name` exists. If not,
-    respond with a HTTP 404 error and a helpful JSON error message. If so,
-    validate the JSON data sent in the request body and update the pet
-    with that `name` with all the new fields. If validation fails,
-    respond with a HTTP 400 error."""
+
 @app.route('/pets/<name>', methods=['GET', 'PUT'])
 def getPet(name):
         if request.method == 'PUT':
@@ -69,11 +64,11 @@ def getPet(name):
                     if ((not(result['age'] == "")) & (not(result['species'] == ""))):
                         pet['age'] = result['age']
                         pet['species'] = result['species']
-				        return 'it worked'
+                        return 'it worked'
                     else:
                         return 'HTTP 400 Error: Bad Request -- Missing parameters.\n', 400
 
-            return json.dumps({'error':'A pet with that name already exists'}), 404
+            return json.dumps({'error': 'A pet with that name already exists'}), 404
 
         else:
             for pet in list_of_pets:
@@ -88,7 +83,6 @@ def pets():
     if request.method == 'POST':
         # Parse the request into a dictionary json object
         result = request.form
-        print 'hello world!'
         print result
 
         name = result['name']
@@ -101,7 +95,7 @@ def pets():
             for pet in list_of_pets:
                 if(pet['name'] == name):
                     # Issue where the name already exists
-                    return json.dumps({'error':'name already exists'}), 409
+                    return json.dumps({'error': 'name already exists'}), 409
 
             list_of_pets.append(result)
             return 'Pet was saved!', 201
