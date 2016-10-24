@@ -38,6 +38,13 @@
 """
 from flask import Flask, request, json
 from flask import jsonify
+import pymongo
+from pymongo import MongoClient
+
+client = MongoClient()
+db = client.test_database
+# collection = db.test_collection
+
 
 list_of_pets = []
 app = Flask(__name__)
