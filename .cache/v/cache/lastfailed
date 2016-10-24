@@ -1,3 +1,4 @@
 {
-  "test_server.py::FlaskServerTest::test_hello_to_person": true
+  "test_server.py::FlaskServerTest::test_hello_to_person": true, 
+  "test_server.py::FlaskServerTest::test_post_pet": true
 }

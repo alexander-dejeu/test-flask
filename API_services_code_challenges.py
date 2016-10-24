@@ -61,10 +61,18 @@ def hello():
 @app.route('/pets/<name>', methods=['GET', 'PUT'])
 def getPet(name):
         if request.method == 'PUT':
+            result = request.form
+
             for pet in list_of_pets:
                 if pet['name'] == name:
                     # We found a pet with that name and can now update fields
-                    print(pet)
+                    if ((not(result['age'] == "")) & (not(result['species'] == ""))):
+                        pet['age'] = result['age']
+                        pet['species'] = result['species']
+				        return 'it worked'
+                    else:
+                        return 'HTTP 400 Error: Bad Request -- Missing parameters.\n', 400
+
             return json.dumps({'error':'A pet with that name already exists'}), 404
 
         else:
