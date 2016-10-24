@@ -70,12 +70,20 @@ def getPet(name):
 
             return json.dumps({'error': 'A pet with that name already exists'}), 404
 
-        else:
+        elif request.method == 'GET':
             for pet in list_of_pets:
                 if(pet['name'] == name):
                     return jsonify(pet)
         # abort(404)
             return '404 Error - page not found! :(', 404
+        elif request.method == 'DELETE':
+            if pet in list_of_pets:
+                if pet['name'] == name:
+                    temp_pet = pet
+                    del pet
+                    return temp_pet
+
+            return 'HTTP 404 Error: Page Not Found -- Pet does not exist in store\n', 404
 
 
 @app.route('/pets', methods=['GET', 'POST'])
